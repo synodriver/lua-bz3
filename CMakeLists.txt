@@ -3,8 +3,8 @@ project(lua_bz3 C)
 
 set(CMAKE_C_STANDARD 11)
 
-link_directories("F:\\conda\\envs\\py310\\Library\\lib" F:\\conda\\envs\\py310\\Library\\bin)
-include_directories(F:/conda/envs/py310/Library/include ./dep/include)
+link_directories("D:\\conda\\envs\\py310\\Library\\lib" D:\\conda\\envs\\py310\\Library\\bin)
+include_directories(D:\\conda\\envs\\py310\\Library\\include ./dep/include)
 
 add_compile_definitions(VERSION="1.2.2.r16-gafe4343")
 
