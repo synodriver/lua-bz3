@@ -101,7 +101,7 @@ lbz3_decode_block(lua_State *L)
     }
     uint8_t *buffer = (uint8_t *) lua_newuserdata(L, buffersize);
     memcpy(buffer, in, newsize);
-    if (bz3_decode_block(*ud, buffer, (int32_t) newsize, oldsize) == -1)
+    if (bz3_decode_block(*ud, buffer, buffersize, (int32_t) newsize, oldsize) == -1)
     {
         return luaL_error(L, "Failed to decode a block: %s\n", bz3_strerror(*ud));
     }
@@ -243,6 +243,32 @@ ldecompress(lua_State *L)
     return 1;
 }
 
+static int
+lmin_memory_needed(lua_State* L)
+{
+    if (lua_gettop(L) != 1)
+    {
+        return luaL_error(L, "must have a block_size");
+    }
+    int32_t block_size = (int32_t)luaL_checkinteger(L, 1);
+    lua_pushinteger(L, (lua_Integer)bz3_min_memory_needed(block_size));
+    return 1;
+}
+
+static int
+lorig_size_sufficient_for_decode(lua_State* L)
+{
+    if (lua_gettop(L) != 2)
+    {
+        return luaL_error(L, "must have a block and origin size");
+    }
+    size_t block_size;
+    const uint8_t * block = (const uint8_t *)luaL_checklstring(L, 1, &block_size);
+    int32_t orig_size = (int32_t)luaL_checkinteger(L, 2);
+    lua_pushinteger(L, (lua_Integer)bz3_orig_size_sufficient_for_decode(block, block_size, orig_size));
+    return 1;
+}
+
 static luaL_Reg lua_funcs[] = {
         {"newstate",   &lnewstate},
         {"newbuffer",  &lnewbuffer},
@@ -250,6 +276,8 @@ static luaL_Reg lua_funcs[] = {
         {"bound",      &lbound},
         {"compress",   &lcompress},
         {"decompress", &ldecompress},
+        {"min_memory_needed", &lmin_memory_needed},
+        {"orig_size_sufficient_for_decode", &lorig_size_sufficient_for_decode},
         {NULL, NULL}
 };
 

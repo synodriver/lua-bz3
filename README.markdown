@@ -3,7 +3,7 @@
 ### usage
 
 ```lua
-bz3 = require("bz3")
+local bz3 = require("bz3")
 
 local data = "1234"
 for i=1,7 do
@@ -16,4 +16,6 @@ local compressed = bz3.compress(data, 1000)
 print("compressed size "..#compressed)
 decompressed = bz3.decompress(compressed, 1000)
 assert(decompressed==data)
+
+print("min_memory_needed 1000000   "..bz3.min_memory_needed(1000000))
 ```
